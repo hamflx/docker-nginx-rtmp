@@ -9,6 +9,8 @@ FROM alpine:3.13 as build-nginx
 ARG NGINX_VERSION
 ARG NGINX_RTMP_VERSION
 
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+
 # Build dependencies.
 RUN apk add --update \
   build-base \
@@ -48,6 +50,7 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
   --with-threads \
   --with-file-aio \
   --with-http_ssl_module \
+  --with-http_v2_module \
   --with-debug \
   --with-cc-opt="-Wimplicit-fallthrough=0" && \
   cd /tmp/nginx-${NGINX_VERSION} && make && make install
@@ -58,6 +61,8 @@ FROM alpine:3.13 as build-ffmpeg
 ARG FFMPEG_VERSION
 ARG PREFIX=/usr/local
 ARG MAKEFLAGS="-j4"
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 # FFmpeg build dependencies.
 RUN apk add --update \
@@ -82,7 +87,7 @@ RUN apk add --update \
   x265-dev \
   yasm
 
-RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories
+RUN echo http://mirrors.tuna.tsinghua.edu.cn/alpine/edge/community >> /etc/apk/repositories
 RUN apk add --update fdk-aac-dev
 
 # Get FFmpeg source.
@@ -130,6 +135,8 @@ LABEL MAINTAINER Alfred Gutierrez <alf.g.jr@gmail.com>
 ENV HTTP_PORT 80
 ENV HTTPS_PORT 443
 ENV RTMP_PORT 1935
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 RUN apk add --update \
   ca-certificates \
