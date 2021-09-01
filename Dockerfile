@@ -49,6 +49,8 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
   --conf-path=/etc/nginx/nginx.conf \
   --with-threads \
   --with-file-aio \
+  --with-stream \
+  --with-stream_ssl_module \
   --with-http_ssl_module \
   --with-http_v2_module \
   --with-debug \
